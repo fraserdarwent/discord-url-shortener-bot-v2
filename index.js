@@ -65,6 +65,8 @@ ${response}`)
         .catch((error) => {
           if (error.code != 10008) {
             console.error(error)
+          } else {
+            console.log('already deleted')
           }
         })
     })
