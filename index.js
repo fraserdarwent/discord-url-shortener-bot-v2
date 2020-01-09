@@ -46,7 +46,8 @@ bot.on("message", (message) => {
       })
 
       console.log(`sending message: ${response}`)
-      channel.send(response)
+      channel.send(`${author}
+      ${response}`)
       message.delete()
     })
 });
