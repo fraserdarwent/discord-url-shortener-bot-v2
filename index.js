@@ -47,20 +47,26 @@ bot.on("message", (message) => {
     promises.push(fetch(`https://prbn.it/${match}`, { method: 'POST' }).then((response) => { return response.text() }).then((body) => { console.log(`returning ${body}`); return body }))
   })
 
+  let response = content;
+
   Promise.all(promises)
     .then((replacements) => {
-      let response = content;
-
       let index = 0;
       matches.forEach((match) => {
         response = response.replace(match, replacements[index])
         index++;
       })
-
+      return message.delete()
+    })
+    .then(() => {
       console.log(`sending message: ${response}`)
       channel.send(`${author}
 ${response}`)
-      message.delete()
+    })
+    .catch((error) => {
+      if (error.code != 10008) {
+        console.error(error)
+      }
     })
 });
 // This establishes a websocket connection to Discord.
