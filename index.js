@@ -22,7 +22,15 @@ bot.on("message", (message) => {
     return;
   }
 
-  const matches = content.match(/http(s)?:\/\/\S*/g)
+  let matches = content.match(/http(s)?:\/\/\S*/g)
+
+  matches = matches
+    .filter((match) => {
+      return 14 < match.length
+    })
+    .filter((match) => {
+      !match.match(/open.spotify.com/g)
+    })
 
   if (!matches) {
     return;
@@ -32,7 +40,7 @@ bot.on("message", (message) => {
 
   // for each match get the short url and replace it
   matches.forEach((match) => {
-    promises.push(fetch(`https://prbn.it/${match}`, { method: 'POST' }).then((response) => {return response.text()}).then((body)=>{console.log(`returning ${body}`);return body}))
+    promises.push(fetch(`https://prbn.it/${match}`, { method: 'POST' }).then((response) => { return response.text() }).then((body) => { console.log(`returning ${body}`); return body }))
   })
 
   Promise.all(promises)
