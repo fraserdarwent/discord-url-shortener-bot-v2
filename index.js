@@ -56,17 +56,17 @@ bot.on("message", (message) => {
         response = response.replace(match, replacements[index])
         index++;
       })
-      return message.delete()
-    })
-    .then(() => {
-      console.log(`sending message: ${response}`)
-      channel.send(`${author}
+      message.delete()
+        .then(() => {
+          console.log(`sending message: ${response}`)
+          channel.send(`${author}
 ${response}`)
-    })
-    .catch((error) => {
-      if (error.code != 10008) {
-        console.error(error)
-      }
+        })
+        .catch((error) => {
+          if (error.code != 10008) {
+            console.error(error)
+          }
+        })
     })
 });
 // This establishes a websocket connection to Discord.
