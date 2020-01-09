@@ -24,16 +24,19 @@ bot.on("message", (message) => {
 
   let matches = content.match(/http(s)?:\/\/\S*/g)
 
-  matches = matches
-    .filter((match) => {
-      return 14 < match.length
-    })
+  if (!matches) {
+    return;
+  }
+
+  matches = matches.filter((match) => {
+    return 15 < match.length
+  })
 
   matches = matches.filter((match) => {
     return !match.match(/open.spotify.com/g)
   })
 
-  if (!matches) {
+  if (matches.length < 1) {
     return;
   }
 
