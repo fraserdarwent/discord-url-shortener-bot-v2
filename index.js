@@ -28,9 +28,10 @@ bot.on("message", (message) => {
     .filter((match) => {
       return 14 < match.length
     })
-    .filter((match) => {
-      !match.match(/open.spotify.com/g)
-    })
+
+  matches = matches.filter((match) => {
+    return !match.match(/open.spotify.com/g)
+  })
 
   if (!matches) {
     return;
