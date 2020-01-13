@@ -22,38 +22,38 @@ bot.on("message", (message) => {
     return;
   }
 
-  let matches = content.match(/http(s)?:\/\/\S*/g)
+  let links = content.match(/http(s)?:\/\/\S*/g)
 
-  if (!matches) {
+  if (!links) {
     return;
   }
 
-  matches = matches.filter((match) => {
-    return 15 < match.length
+  links = links.filter((link) => {
+    return 15 < link.length
   })
 
-  matches = matches.filter((match) => {
-    return !match.match(/open.spotify.com/g)
+  links = links.filter((link) => {
+    return !link.match(/open.spotify.com/g)
   })
 
-  if (matches.length < 1) {
+  if (links.length < 1) {
     return;
   }
 
   const promises = []
 
   // for each match get the short url and replace it
-  matches.forEach((match) => {
-    promises.push(fetch(`https://prbn.it/${match}`, { method: 'POST' }).then((response) => { return response.text() }).then((body) => { console.log(`returning ${body}`); return body }))
+  links.forEach((link) => {
+    promises.push(fetch(`https://prbn.it/${link}`, { method: 'POST' }).then((response) => { return response.text() }).then((body) => { console.log(`returning ${body}`); return body }))
   })
 
   let response = content;
 
   Promise.all(promises)
-    .then((replacements) => {
+    .then((shortLinks) => {
       let index = 0;
-      matches.forEach((match) => {
-        response = response.replace(match, replacements[index])
+      links.forEach((link) => {
+        response = response.replace(link, shortLinks[index])
         index++;
       })
       message.delete()
@@ -67,6 +67,17 @@ ${response}`)
             console.error(error)
           } else {
             console.log('already deleted')
+            shortLinks.forEach((shortLink) => {
+              fetch(shortLink, {
+                method: 'DELETE'
+              })
+                .then((response) => {
+                  console.log(`deleted ${shortLink}`)
+                })
+                .catch((error) => {
+                  console.error(error)
+                })
+            })
           }
         })
     })
